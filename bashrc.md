@@ -4,13 +4,19 @@
 
 ## Custom commands
 ``` bash
-# Shortcut to repository/projects folder
-REP="~/Documents/repositories"
-alias rep="cd $REP"
+# Variable shortcut to repository/projects folder
+export REP="/home/USER/Documents/repositories"
+# "~" in variables will fail when used with cd (eg: cd $REP)
+function rep(){ command cd $REP; }
 
-# Alias to execute some programs/scripts straight from CLI
-alias pycharm="~/Documents/programs/pycharm-community/bin/pycharm.sh"
-alias gdrive="$REP/third/gdrive"
+# Functions to execute some programs/scripts straight from CLI
+# Functions over alias (alias can't be exported so they can't be used inside session scripts)
+function gdrive(){ $REP/third/gdrive $@; }
+function pycharm(){ ~/Documents/programs/pycharm/bin/pycharm.sh $@; }
+function start-ws(){ ~/.scripts/start_workspace.sh $@; }
+
+# Export functions so they are available from session scripts
+export -f rep2 gdrive pycharm
 
 # Set history size to 5k and filesize to 10kb
 # bc i want my entries to be available for reverse-i-search

@@ -1,34 +1,36 @@
 # Start My Workspace
-###### Requires to have defined variable REP
-###### REP="~/Documents/repositories/" (i include it in .bashrc)
-
 
 ### Backup Notes-Up DB
-	gdrive sync upload --keep-local ~/.local/share/notes-up 1oLl7K9wK93B1EZVkYLWhLvjeaenCK3Zy
+#### `nosync` to prevent execution
+	if [[ ! "$@" == *"nosync"* ]]; then
+		gdrive sync upload --keep-local ~/.local/share/notes-up GD_FOLDER_ID
+	fi
 
 ### Start DB service
 	sudo service mysql start
 
 ### Open browser (WhatsApp Web, Discord, YTMusic)
-	google-chrome https://web.whatsapp.com/
-	google-chrome https://discord.com/app
-	google-chrome https://music.youtube.com/watch?v=dUNOfNad59Q
-
+##### `nowsp` or `nodc` or `nomusic` to prevent execution
+	query="google-chrome"
+	if [[ ! "$@" == *"nowsp"* ]]; then
+		query+=" https://web.whatsapp.com/"
+	fi
+	if [[ ! "$@" == *"nodc"* ]]; then
+		query+=" https://discord.com/app"
+	fi
+	if [[ ! "$@" == *"nomusic"* ]]; then
+		query+=" https://music.youtube.com/watch?v=dUNOfNad59Q"
+	fi
+	if [ ! "$query" == "google-chrome" ]; then
+	   $query --new-window &
+	fi
 
 ### Open project
 ###### Uses [elementaryOS terminal](https://github.com/elementary/terminal)
-	if [ "$1" != "" ]; then
-		if false; then true
+	function exec(){ io.elementary.terminal -t -x "bash -c '$@'"; }
 
-		# Project1
-		elif [ "$1" == "keyword1" ] || [ "$1" == "KEYWORD1" ]; then
-			echo "--- Project1 ---"
-			# Define pre defined function to execute per project
-			#io.elementary.terminal -- COMMAND
-
-		# Project2
-		elif [ "$1" == "keyword2" ]; then
-			echo "--- Project2 ---"
-
-		fi
-	fi
+	# Some Project
+	if [[ "$@" == *"keyword"* ]]; then
+		echo "--- Project ---"
+		exec \
+			atom -n $REP/project
